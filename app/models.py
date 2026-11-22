@@ -1,31 +1,11 @@
-import os
-from dotenv import load_dotenv
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, CHAR, Boolean, DateTime,
     ForeignKey, UniqueConstraint, Index, Identity, func, text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from geoalchemy2 import Geography
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.engine import URL
 from geoalchemy2.elements import WKTElement
-
-load_dotenv()
-
-url = URL.create(
-    drivername="postgresql+psycopg2",
-    username=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST"),
-    port=int(os.getenv("DB_PORT")),
-    database=os.getenv("DB_NAME"),
-)
-
-# cria a conexão do seu banco
-db = create_engine(url)
-
-# cria a base do banco de dados
-Base = declarative_base()
+from database import Base
 
 # criar as classes/tabelas do banco
 class Usuario(Base):

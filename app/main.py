@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from app.routes.routes import router
+from app.routes.fotos import router
 import os
 
 load_dotenv()
