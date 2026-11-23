@@ -19,7 +19,7 @@ url = URL.create(
 )
 
 # cria a conexão do seu banco
-db = create_engine(url)
+db = create_engine(url, connect_args={"connect_timeout": 5}, pool_pre_ping=True)
 
 # cria a base do banco de dados
 Base = declarative_base()

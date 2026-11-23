@@ -5,7 +5,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from geoalchemy2 import Geography
 from geoalchemy2.elements import WKTElement
-from database import Base
+from app.database import Base
 
 # criar as classes/tabelas do banco
 class Usuario(Base):
