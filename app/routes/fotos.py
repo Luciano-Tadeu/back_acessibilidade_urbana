@@ -1,10 +1,11 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from app.services.storage import upload_foto, TAMANHO_MAXIMO
+from app.schemas import FotoOut
 
 router = APIRouter(prefix="/fotos", tags=["fotos"])
 
 
-@router.post("")
+@router.post("", response_model=FotoOut)
 def enviar_foto(foto: UploadFile = File(...)):
     # lê no máximo 5 MB + 1 byte: se vier mais que isso, o storage recusa
     conteudo = foto.file.read(TAMANHO_MAXIMO + 1)
@@ -14,4 +15,4 @@ def enviar_foto(foto: UploadFile = File(...)):
     except ValueError as erro:
         raise HTTPException(status_code=400, detail=str(erro))
 
-    return {"url": url}
+    return FotoOut(url=url)

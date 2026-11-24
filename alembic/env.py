@@ -5,7 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models import Base, db
+from app.database import Base, db
+import app.models  # noqa: F401  (registra as tabelas na Base)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,7 +27,11 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
+def include_object(object, name, type_, reflected, compare_to):
+    # tabela criada e mantida pela extensão PostGIS: o Alembic não deve mexer nela
+    if type_ == "table" and name == "spatial_ref_sys":
+        return False
+    return True
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -46,6 +51,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object
     )
 
     with context.begin_transaction():
@@ -63,7 +69,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata, include_object=include_object
         )
 
         with context.begin_transaction():

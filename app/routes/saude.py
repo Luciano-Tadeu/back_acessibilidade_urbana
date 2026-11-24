@@ -1,22 +1,19 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import text
-from sqlalchemy.orm import Session
-from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies import limitar_envios
-from app.database import db 
+from app.dependencies import get_db, limitar_envios
 
 router = APIRouter(prefix="/saude", tags=["saude"])
 
 
 @router.get("/banco")
-def testar_banco():
+async def testar_banco(sessao: AsyncSession = Depends(get_db)):
     try:
-        with Session(db) as sessao:
-            sessao.execute(text("SELECT 1"))
-            postgis = sessao.execute(
-                text("SELECT extversion FROM pg_extension WHERE extname = 'postgis'")
-            ).scalar()
+        await sessao.execute(text("SELECT 1"))
+        postgis = await sessao.scalar(
+            text("SELECT extversion FROM pg_extension WHERE extname = 'postgis'")
+        )
     except Exception as erro:
         print("Falha ao conectar no banco:", erro)  # o detalhe fica só no terminal
         raise HTTPException(status_code=503, detail="Banco indisponível")
