@@ -68,6 +68,7 @@ async def buscar_por_raio(sessao: AsyncSession, busca: BuscaOcorrencias) -> list
             latitude=linha.latitude,
             longitude=linha.longitude,
             photo_url=url_da_chave(linha.foto_chave),
+            device_hash = linha.device_hash,
             created_at=linha.criado_em,
         )
         for linha in linhas

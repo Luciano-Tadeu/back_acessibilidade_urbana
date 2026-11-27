@@ -42,6 +42,7 @@ class OcorrenciaOut(BaseModel):
     latitude: float
     longitude: float
     photo_url: str
+    device_hash: UUID
     created_at: datetime
 
 
@@ -76,6 +77,9 @@ class ValidacaoOut(BaseModel):
     ocorrencia_id: UUID
     still_exists: bool
     ocorrencia_ativa: bool  # False se este voto removeu o pino do mapa
+
+class ValidacaoSearch(BaseModel):
+    ocorrencia_id: UUID
 
 
 # ---------- WebSocket ----------

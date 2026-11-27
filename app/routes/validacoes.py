@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import dispositivo_atual, get_db
-from app.schemas import ValidacaoCreate, ValidacaoOut
+from app.schemas import ValidacaoCreate, ValidacaoOut, ValidacaoSearch
 from app.services import validacao_service
 from app.services.validacao_service import AutorNaoPodeValidar, OcorrenciaNaoEncontrada
 from app.services.connection_manager import gerenciador
@@ -39,3 +39,10 @@ async def validar_ocorrencia(
         still_exists=dados.still_exists,
         ocorrencia_ativa=resultado.ativa,
     )
+
+@router.get("/validacoes", response_model=list[ValidacaoSearch])
+async def validar_ocorrencia(
+    device_hash: str = Depends(dispositivo_atual),
+    sessao: AsyncSession = Depends(get_db),
+):
+    return await validacao_service.buscar_validacoes(device_hash, sessao)

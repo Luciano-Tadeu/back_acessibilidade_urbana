@@ -30,6 +30,7 @@ async def criar_ocorrencia(
         latitude=dados.latitude,
         longitude=dados.longitude,
         photo_url=url_da_chave(ocorrencia.foto_chave),
+        device_hash=dados.device_hash,
         created_at=ocorrencia.criado_em,
     )
     background.add_task(gerenciador.transmitir_criada, saida)

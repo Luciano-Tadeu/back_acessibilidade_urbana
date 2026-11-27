@@ -6,6 +6,7 @@ from sqlalchemy import func, select, cast
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.schemas import ValidacaoSearch
 from app.models import Ocorrencia, Validacao
 
 VOTOS_PARA_REMOVER = 2  # aparelhos diferentes dizendo "não está mais"
@@ -81,3 +82,13 @@ async def registrar_validacao(
 
     await sessao.commit()
     return resultado
+
+async def buscar_validacoes(device_hash: str, sessao: AsyncSession):
+    stmt = select(Validacao).where(Validacao.device_hash == device_hash)
+    resultado = await sessao.execute(stmt)
+    linhas = resultado.scalars().all()
+
+    return [
+        ValidacaoSearch(ocorrencia_id=linha.ocorrencia_id) for linha in linhas
+    ]
+
