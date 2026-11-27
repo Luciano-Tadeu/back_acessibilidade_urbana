@@ -47,6 +47,7 @@ async def buscar_por_raio(sessao: AsyncSession, busca: BuscaOcorrencias) -> list
             func.ST_Y(cast(Ocorrencia.localizacao, Geometry)).label("latitude"),
             func.ST_X(cast(Ocorrencia.localizacao, Geometry)).label("longitude"),
             Ocorrencia.foto_chave,
+            Ocorrencia.device_hash,
             Ocorrencia.criado_em,
         )
         .join(CategoriaObstaculo, CategoriaObstaculo.id == Ocorrencia.categoria_id)

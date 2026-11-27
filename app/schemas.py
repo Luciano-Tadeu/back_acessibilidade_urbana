@@ -42,7 +42,7 @@ class OcorrenciaOut(BaseModel):
     latitude: float
     longitude: float
     photo_url: str
-    device_hash: UUID
+    device_hash: str
     created_at: datetime
 
 
